@@ -958,13 +958,13 @@ if (addPortfolioAccountBtn) {
     saveAssumptionsBtn.addEventListener('click', () => {
       saveAssumptionsToStorage();
       const originalLabel = saveAssumptionsBtn.textContent;
-      saveAssumptionsBtn.textContent = 'Saved';
+      saveAssumptionsBtn.textContent = 'Saving...';
       saveAssumptionsBtn.classList.remove('btn-primary', 'btn-secondary');
       saveAssumptionsBtn.classList.add('btn-success');
       window.setTimeout(() => {
         saveAssumptionsBtn.textContent = originalLabel;
         saveAssumptionsBtn.classList.remove('btn-success');
-        saveAssumptionsBtn.classList.add('btn-secondary');
+        saveAssumptionsBtn.classList.add('btn-primary');
       }, 1200);
     });
   }
@@ -1938,6 +1938,11 @@ function mapPortfolioToInputs(totals) {
 
 function applyPortfolioInputsToAssumptions(inputs) {
   if (!inputs || typeof inputs !== 'object') return;
+
+  // Set mode to 'amount' before writing fields so that the initialPortfolio
+  // change event does not trigger syncInitialSpendingFromRate() and overwrite
+  // the spending value we are about to apply.
+  withdrawalInputMode = 'amount';
 
   planForm.applyDefaults(inputs);
   advancedForm.applyDefaults(inputs);
