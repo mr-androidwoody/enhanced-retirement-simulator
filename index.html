@@ -36,8 +36,8 @@
               data-tooltip="Adjusts your withdrawals up or down based on portfolio performance (Guyton-Klinger), helping sustain income while reducing the risk of running out."
             >
               <strong>dynamic spending guardrails</strong>
-            </span>,
-            alongside two-person state pension offsets and cashlike buffers. Enter your assumptions and run the model to explore portfolio outcomes, spending sustainability, and how withdrawals adjust over time.
+            </span>.
+            Enter your assumptions and run the model to explore portfolio outcomes, spending sustainability, and how withdrawals adjust over time.
           </p>
         </div>
 
@@ -355,7 +355,7 @@
                           class="metric-heading-with-tooltip"
                           tabindex="0"
                           data-tooltip="The percentage of this account invested in shares. Higher equity allocations typically increase expected long-term growth but also increase volatility."
-                        >Equity %</span>
+                        >Equities %</span>
                       </th>
                     
                       <th>
@@ -370,7 +370,7 @@
                         <span
                           class="metric-heading-with-tooltip"
                           tabindex="0"
-                          data-tooltip="Cashlike includes cash ISAs, money-market funds, and QMMF used as a drawdown buffer."
+                          data-tooltip="Cashlike includes cash ISAs, money-market funds, and QMMFs. They typically pay an interest based return."
                         >Cashlike %</span>
                       </th>
                     
@@ -378,7 +378,7 @@
                         <span
                           class="metric-heading-with-tooltip"
                           tabindex="0"
-                          data-tooltip="Cash represents actual liquid cash holdings, like current accounts, separate from cashlike instruments used as buffers."
+                          data-tooltip="Cash represents actual liquid cash holdings, like current accounts, separate from cashlike instruments."
                         >Cash %</span>
                       </th>
                     
@@ -1283,17 +1283,17 @@
                                   class="stepper-btn"
                                   data-step-target="equityReturn"
                                   data-step-direction="-1"
-                                  data-step-size="1"
-                                  aria-label="Decrease equity return by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Decrease equity return by 0.1 percentage point"
                                 >−</button>
-                                <input id="equityReturn" type="number" step="1" />
+                                <input id="equityReturn" type="number" step="0.1" />
                                 <button
                                   type="button"
                                   class="stepper-btn"
                                   data-step-target="equityReturn"
                                   data-step-direction="1"
-                                  data-step-size="1"
-                                  aria-label="Increase equity return by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Increase equity return by 0.1 percentage point"
                                 >+</button>
                               </div>
                             </label>
@@ -1306,17 +1306,17 @@
                                   class="stepper-btn"
                                   data-step-target="equityVolatility"
                                   data-step-direction="-1"
-                                  data-step-size="1"
-                                  aria-label="Decrease equity volatility by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Decrease equity volatility by 0.1 percentage point"
                                 >−</button>
-                                <input id="equityVolatility" type="number" min="0" step="1" />
+                                <input id="equityVolatility" type="number" min="0" step="0.1" />
                                 <button
                                   type="button"
                                   class="stepper-btn"
                                   data-step-target="equityVolatility"
                                   data-step-direction="1"
-                                  data-step-size="1"
-                                  aria-label="Increase equity volatility by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Increase equity volatility by 0.1 percentage point"
                                 >+</button>
                               </div>
                             </label>
@@ -1335,17 +1335,17 @@
                                   class="stepper-btn"
                                   data-step-target="bondReturn"
                                   data-step-direction="-1"
-                                  data-step-size="1"
-                                  aria-label="Decrease bond return by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Decrease bond return by 0.1 percentage point"
                                 >−</button>
-                                <input id="bondReturn" type="number" step="1" />
+                                <input id="bondReturn" type="number" step="0.1" />
                                 <button
                                   type="button"
                                   class="stepper-btn"
                                   data-step-target="bondReturn"
                                   data-step-direction="1"
-                                  data-step-size="1"
-                                  aria-label="Increase bond return by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Increase bond return by 0.1 percentage point"
                                 >+</button>
                               </div>
                             </label>
@@ -1358,17 +1358,17 @@
                                   class="stepper-btn"
                                   data-step-target="bondVolatility"
                                   data-step-direction="-1"
-                                  data-step-size="1"
-                                  aria-label="Decrease bond volatility by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Decrease bond volatility by 0.1 percentage point"
                                 >−</button>
-                                <input id="bondVolatility" type="number" min="0" step="1" />
+                                <input id="bondVolatility" type="number" min="0" step="0.1" />
                                 <button
                                   type="button"
                                   class="stepper-btn"
                                   data-step-target="bondVolatility"
                                   data-step-direction="1"
-                                  data-step-size="1"
-                                  aria-label="Increase bond volatility by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Increase bond volatility by 0.1 percentage point"
                                 >+</button>
                               </div>
                             </label>
@@ -1387,17 +1387,17 @@
                                   class="stepper-btn"
                                   data-step-target="cashlikeReturn"
                                   data-step-direction="-1"
-                                  data-step-size="1"
-                                  aria-label="Decrease cashlike return by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Decrease cashlike return by 0.1 percentage point"
                                 >−</button>
-                                <input id="cashlikeReturn" type="number" step="1" />
+                                <input id="cashlikeReturn" type="number" step="0.1" />
                                 <button
                                   type="button"
                                   class="stepper-btn"
                                   data-step-target="cashlikeReturn"
                                   data-step-direction="1"
-                                  data-step-size="1"
-                                  aria-label="Increase cashlike return by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Increase cashlike return by 0.1 percentage point"
                                 >+</button>
                               </div>
                             </label>
@@ -1410,17 +1410,17 @@
                                   class="stepper-btn"
                                   data-step-target="cashlikeVolatility"
                                   data-step-direction="-1"
-                                  data-step-size="1"
-                                  aria-label="Decrease cashlike volatility by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Decrease cashlike volatility by 0.1 percentage point"
                                 >−</button>
-                                <input id="cashlikeVolatility" type="number" min="0" step="1" />
+                                <input id="cashlikeVolatility" type="number" min="0" step="0.1" />
                                 <button
                                   type="button"
                                   class="stepper-btn"
                                   data-step-target="cashlikeVolatility"
                                   data-step-direction="1"
-                                  data-step-size="1"
-                                  aria-label="Increase cashlike volatility by 1 percentage point"
+                                  data-step-size="0.1"
+                                  aria-label="Increase cashlike volatility by 0.1 percentage point"
                                 >+</button>
                               </div>
                             </label>
