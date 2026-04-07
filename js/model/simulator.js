@@ -25,11 +25,13 @@ export const DEFAULT_INPUTS = {
   cashAllocation: 0,
   rebalanceToTarget: true,
 
+  initialWithdrawalRate: 4,
+
   equityReturn: 7,
   equityVolatility: 16,
-  bondReturn: 3,
-  bondVolatility: 7,
-  cashlikeReturn: 4,
+  bondReturn: 3.5,
+  bondVolatility: 6,
+  cashlikeReturn: 3.8,
   cashlikeVolatility: 1,
   annualFeeRate: 0.27, // percentage points (e.g. 0.27 = 0.27%). Converted to decimal by normaliseInputs. Keep consistent with DOM field values returned by readValues().
   inflation: 2.7,
