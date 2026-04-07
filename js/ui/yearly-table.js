@@ -111,14 +111,14 @@ export function renderYearlyTable(table, rows, useReal, formatCurrency, options 
         <td class="col-number">${formatCurrency(actual)}</td>
         <td class="cut-cell col-number">
           <div class="status-cell">
-            <span class="status-value">${cutDisplay}</span>
             ${cutDot}
+            <span class="status-value">${cutDisplay}</span>
           </div>
         </td>
         <td class="shortfall-cell col-number">
           <div class="status-cell">
-            <span class="status-value">${shortfallDisplay}</span>
             ${shortfallDot}
+            <span class="status-value">${shortfallDisplay}</span>
           </div>
         </td>
         <td class="col-number">${formatCurrency(useReal ? row.statePensionReal : row.statePensionNominal)}</td>

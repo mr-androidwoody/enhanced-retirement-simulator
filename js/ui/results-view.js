@@ -574,12 +574,14 @@ function renderTopRowCardValues({
   activePath,
   profiles,
   useReal,
-  formatters
+  formatters,
+  tableView
 }) {
   const { formatCurrency, formatPercent } = formatters;
   const mode = String(result?.mode ?? '').toLowerCase();
   const isHistorical = mode === 'historical';
   const hasStressSummary = Boolean(result?.summary?.worstStressName);
+  const selectedPathMeta = getSelectedPathMeta(tableView);
 
   const medianProfile = profiles?.medianProfile || null;
   const downsideProfile = profiles?.downsideProfile || medianProfile || null;
@@ -626,10 +628,10 @@ function renderTopRowCardValues({
     }
   }
 
-  // Panel 2: Expected outcome (median path)
+  // Panel 2: Expected outcome (selected path)
   if (elements.summaryMedianEnd) {
     const expectedValue = Number(
-      medianProfile?.endValue ??
+      activeProfile?.endValue ??
       getSelectedPathEndValue(activePath, getPathRows(activePath), useReal)
     );
 
@@ -640,23 +642,23 @@ function renderTopRowCardValues({
   }
 
   if (elements.summaryMedianEndDesc) {
-    const medianDepleted = Boolean(medianProfile?.depleted);
-    const endPctVsStart = Number(medianProfile?.endValuePctVsStart);
+    const selectedDepleted = Boolean(activeProfile?.depleted);
+    const endPctVsStart = Number(activeProfile?.endValuePctVsStart);
 
-    if (medianDepleted) {
+    if (selectedDepleted) {
       setText(
         elements.summaryMedianEndDesc,
-        'Funds spending until depletion.'
+        `Funds spending until depletion on the selected ${selectedPathMeta.label} path.`
       );
     } else if (Number.isFinite(endPctVsStart) && endPctVsStart <= 0.1) {
       setText(
         elements.summaryMedianEndDesc,
-        'Funds spending, ending close to zero.'
+        `Funds spending on the selected ${selectedPathMeta.label} path, ending close to zero.`
       );
     } else {
       setText(
         elements.summaryMedianEndDesc,
-        'After funding your planned spending throughout.'
+        `After funding your planned spending throughout the selected ${selectedPathMeta.label} path.`
       );
     }
   }
@@ -928,7 +930,8 @@ export function renderResultsView({
     activePath,
     profiles,
     useReal,
-    formatters
+    formatters,
+    tableView
   });
 
   if (isHistorical || hasMonteCarlo) {
@@ -1003,31 +1006,37 @@ function renderPerformanceSummaryOverlayBody(summary, formatters) {
     ? [
         {
           label: 'Portfolio value at start',
+          tooltip: 'Portfolio value at the beginning of the selected historical scenario.',
           description: 'Starting portfolio value for this scenario',
           value: valueWithClass(summary.startValue, { currency: true })
         },
         {
           label: 'Portfolio value at end',
+          tooltip: 'Portfolio value at the end of the selected historical scenario after returns, income flows, and withdrawals.',
           description: 'Ending portfolio value for this scenario',
           value: valueWithClass(summary.endValue, { currency: true })
         },
         {
           label: 'Portfolio value CAGR',
+          tooltip: 'Annualised growth rate of your portfolio value across this historical path, after market returns and any withdrawals.',
           description: 'Annualised growth of your portfolio value',
           value: valueWithClass(summary.portfolioValueCagr)
         },
         {
           label: 'Max drawdown',
+          tooltip: 'Largest peak-to-trough fall in portfolio value during this historical path.',
           description: 'Largest peak-to-trough portfolio fall',
           value: valueWithClass(summary.maxDrawdown)
         },
         {
           label: 'Worst rolling 5-year return',
+          tooltip: 'Worst annualised return earned over any consecutive 5-year period in this historical path.',
           description: 'Worst annualised return over any 5-year period',
           value: valueWithClass(summary.worstRollingFiveYearReturn)
         },
         {
           label: 'Best rolling 5-year return',
+          tooltip: 'Best annualised return earned over any consecutive 5-year period in this historical path.',
           description: 'Best annualised return over any 5-year period',
           value: valueWithClass(summary.bestRollingFiveYearReturn)
         }
@@ -1035,41 +1044,49 @@ function renderPerformanceSummaryOverlayBody(summary, formatters) {
     : [
         {
           label: 'Portfolio value CAGR',
+          tooltip: 'Annualised growth rate of your portfolio value after market returns, withdrawals, income flows, and spending adjustments.',
           description: 'Annualised growth of your portfolio value',
           value: valueWithClass(summary.portfolioValueCagr)
         },
         {
           label: 'Market CAGR',
+          tooltip: 'Annualised return of the underlying invested portfolio before withdrawals and spending effects.',
           description: 'Annualised return of the underlying market',
           value: valueWithClass(summary.marketCagr)
         },
         {
           label: 'Return gap',
+          tooltip: 'Difference between market return and portfolio value growth, mainly caused by withdrawals, timing of returns, and cash drag.',
           description: 'Difference between your returns and the market',
           value: valueWithClass(summary.returnGap, { signed: true })
         },
         {
           label: 'Max drawdown',
+          tooltip: 'Largest peak-to-trough fall in portfolio value during the scenario.',
           description: 'Largest peak-to-trough portfolio fall',
           value: valueWithClass(summary.maxDrawdown)
         },
         {
           label: 'Worst year return',
+          tooltip: 'Biggest one-year percentage loss in the portfolio during the scenario.',
           description: 'Largest loss in a single year',
           value: valueWithClass(summary.worstYearReturn)
         },
         {
           label: 'Worst rolling 5-year return',
+          tooltip: 'Worst annualised return earned over any consecutive 5-year period.',
           description: 'Worst annualised return over any 5-year period',
           value: valueWithClass(summary.worstRollingFiveYearReturn)
         },
         {
           label: 'Best rolling 5-year return',
+          tooltip: 'Best annualised return earned over any consecutive 5-year period.',
           description: 'Best annualised return over any 5-year period',
           value: valueWithClass(summary.bestRollingFiveYearReturn)
         },
         {
           label: 'End portfolio growth',
+          tooltip: 'Percentage difference between the ending portfolio value and the starting portfolio value over the full scenario.',
           description: 'Percentage change in ending portfolio versus starting value',
           value: valueWithClass(summary.endPortfolioGrowth, { signed: true })
         }
@@ -1079,9 +1096,11 @@ function renderPerformanceSummaryOverlayBody(summary, formatters) {
     <div class="performance-summary-grid">
       ${items
         .map(
-          ({ label, description, value }) => `
+          ({ label, tooltip, description, value }) => `
             <div class="performance-summary-metric">
-              <div class="performance-summary-metric__label">${label}</div>
+              <div class="performance-summary-metric__label">
+                ${renderMetricHeading(label, tooltip || description)}
+              </div>
               <div class="performance-summary-metric__description">${description}</div>
               <div class="performance-summary-metric__value ${value.className}">
                 ${value.text}
@@ -1580,6 +1599,35 @@ function renderPlanOutlookWarningGroups(warningGroups) {
   `;
 }
 
+function getSelectedPathMeta(tableView) {
+  switch (tableView) {
+    case 'p10':
+      return {
+        key: 'p10',
+        label: 'downside',
+        title: 'Expected outcome (downside path)',
+        description: 'Ending portfolio value for the selected downside path.'
+      };
+
+    case 'p90':
+      return {
+        key: 'p90',
+        label: 'upside',
+        title: 'Expected outcome (upside path)',
+        description: 'Ending portfolio value for the selected upside path.'
+      };
+
+    case 'median':
+    default:
+      return {
+        key: 'median',
+        label: 'median',
+        title: 'Expected outcome (median path)',
+        description: 'Representative ending portfolio value for the median path.'
+      };
+  }
+}
+
 function renderResultsContextAndPathSummary({
   result,
   elements,
@@ -1763,6 +1811,7 @@ function renderResultsContextAndPathSummary({
 function renderSummaryCardLabels(elements, result, tableView) {
   const mode = String(result?.mode ?? '').toLowerCase();
   const isHistorical = mode === 'historical';
+  const selectedPathMeta = getSelectedPathMeta(tableView);
 
   if (isHistorical) {
     if (elements.summarySuccessRateLabel) {
@@ -1775,7 +1824,7 @@ function renderSummaryCardLabels(elements, result, tableView) {
     }
 
     if (elements.summaryMedianEndLabel) {
-      elements.summaryMedianEndLabel.textContent = 'Expected outcome (median path)';
+      elements.summaryMedianEndLabel.textContent = 'Expected outcome';
     }
 
     if (elements.summaryMedianEndDesc) {
@@ -1823,12 +1872,11 @@ function renderSummaryCardLabels(elements, result, tableView) {
   }
 
   if (elements.summaryMedianEndLabel) {
-    elements.summaryMedianEndLabel.textContent = 'Expected outcome (median path)';
+    elements.summaryMedianEndLabel.textContent = selectedPathMeta.title;
   }
 
   if (elements.summaryMedianEndDesc) {
-    elements.summaryMedianEndDesc.textContent =
-      'Representative ending portfolio value for the median path.';
+    elements.summaryMedianEndDesc.textContent = selectedPathMeta.description;
   }
 
   if (elements.summaryWorstStressLabel) {
